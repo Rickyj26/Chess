@@ -1,13 +1,30 @@
 package chess;
 
-public class FileSaver {
-    private String file;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-    public FileSaver(String file) {
-        this.file = file;
+public class FileSaver{
+    private FileSaver() {}
+
+    public static void saveGame(Game game) {
+        // Implementation for saving the game
+        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Constants.fileLocation))) {
+            outputStream.writeObject(game);
+        } catch (IOException e) {
+            System.out.println("Error saving game: " + e.getMessage());
+        }
     }
 
-    public void saveGame() {
-        // Implementation for saving the game
+    public static Game getGame() {
+        // returns the game file so Main.java can handle it.
+        try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(Constants.fileLocation))) {
+            return (Game)inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("No saved Files!");
+            return null;
+        }
     }
 }

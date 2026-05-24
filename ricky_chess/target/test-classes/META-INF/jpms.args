@@ -1,4 +1,0 @@
---patch-module
-chess=_
---add-reads
-chess=ALL-UNNAMED
