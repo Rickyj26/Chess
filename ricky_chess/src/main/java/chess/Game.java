@@ -126,14 +126,13 @@ public class Game implements Serializable {
 
         board.getChildren().addAll(p1Name, p1Time, p2Name, p2Time, turn);
         p1Name.relocate(500, 10);
-        p1Time.relocate(500, 40);
+        p1Time.relocate(500, 30);
 
         turn.relocate(500, 230);
 
-        p2Name.relocate(500, 430);
+        p2Name.relocate(500, 440);
         p2Time.relocate(500, 460);
         
-
         Scene chess = new Scene(board, 650, 480);
         stage.setScene(chess);
     }

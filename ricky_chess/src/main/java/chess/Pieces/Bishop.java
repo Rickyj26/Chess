@@ -35,9 +35,11 @@ public class Bishop extends Piece {
             if(board.getChessGrid()[end.getRow()][end.getCol()] != null && board.getChessGrid()[end.getRow()][end.getCol()].getColor() == this.getColor()) {
                 return false;
             }
-
+            
+            // return true if the destination square is occu
             return true;
         }
+
         return false;
     }
 }

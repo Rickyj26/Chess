@@ -10,6 +10,11 @@ public class Rook extends Piece {
         super(color, color.equals(Alliance.WHITE) ? Constants.whiteRook : Constants.blackRook, pos);
     }
 
+    /**
+     * Checks if the Rook Move is legal by checking if the move in the same
+     * row (horizontal move) or same column (vertical move). 
+     * Then, validates if there are any pieces in the way. Finally, checks if the destination square is occupied by a piece of the same color.
+     */
     @Override
     public boolean isLegal(ChessBoard board, Position end) {
         // line logic:
@@ -32,12 +37,16 @@ public class Rook extends Piece {
                }
             }
         }
-        
-        if(board.getChessGrid()[end.getRow()][end.getCol()] != null && board.getChessGrid()[end.getRow()][end.getCol()].getColor() != this.getColor()) {
-            return true;
-        } else if(board.getChessGrid()[end.getRow()][end.getCol()] != null && board.getChessGrid()[end.getRow()][end.getCol()].getColor() == this.getColor()) {
+
+        if(board.getChessGrid()[end.getRow()][end.getCol()] != null && board.getChessGrid()[end.getRow()][end.getCol()].getColor() == this.getColor()) {
             return false;
         }
+        
+        /* 
+        if(board.getChessGrid()[end.getRow()][end.getCol()] != null && board.getChessGrid()[end.getRow()][end.getCol()].getColor() != this.getColor()) {
+            return true;
+        } else 
+        */
 
         return true;
     }
