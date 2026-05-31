@@ -8,9 +8,9 @@ import chess.util.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Piece implements Serializable {
-    protected Image piece;
-    protected ImageView pieceView;
+public abstract class Piece implements Serializable {
+    private transient final Image piece;
+    private transient final ImageView pieceView;
 
     protected final int xPixels = 60;
     protected final int yPixels = 60;
@@ -29,7 +29,7 @@ public class Piece implements Serializable {
     public Piece(Alliance color, String path, Position position) {
         this.color = color;
 
-        this.piece = new Image(getClass().getResourceAsStream(path), xPixels, yPixels, true, false);
+        this.piece = new Image(getClass().getResourceAsStream(path), xPixels, yPixels, false, true);
         this.pieceView = new ImageView(this.piece);
 
         this.currPosition = position;
@@ -37,7 +37,7 @@ public class Piece implements Serializable {
 
     public void capture(ChessBoard chessGrid, Position end) {
         if(chessGrid.getChessGrid()[this.currPosition.getRow()][this.currPosition.getCol()].equals(chessGrid.getChessGrid()[end.getRow()][end.getCol()])) {
-            
+            move(chessGrid, end);
         }
     }
 
@@ -58,7 +58,9 @@ public class Piece implements Serializable {
     }
 
     public void setPosition(Position pos) {
-        //getChessGrid()[row][col] = this;
+        this.currPosition = pos;
+
+        this.pieceView.relocate(xPixels * pos.getCol(), yPixels * pos.getRow());
     }
 
     public Position getPosition() {
@@ -71,5 +73,10 @@ public class Piece implements Serializable {
 
     public ImageView getPieceView() {
         return this.pieceView;
+    }
+
+    @Override
+    public String toString() {
+        return this.color + " " + this.getClass().getSimpleName();
     }
 }

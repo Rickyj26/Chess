@@ -1,14 +1,10 @@
 package chess;
 
-import chess.util.Constants;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -64,7 +60,7 @@ public class Main extends Application {
             System.out.println("Saving and exiting game...");
 
             // logic for saving game.
-            chessGame.save();   
+            //chessGame.save();   
 
             System.out.println("Game saved successfully!");
             primaryStage.close();
@@ -73,21 +69,21 @@ public class Main extends Application {
         /*HOME MENU*/
         // Home UI elements. Rudimentary for now, but it will be improved in the future.
         //Image wKing = new Image(Constants.whiteKing, 60, 60, true, false);
-        Image wKing = new Image(getClass().getResourceAsStream(Constants.whiteKing), 60, 60, true, false);
+        //Image wKing = new Image(getClass().getResourceAsStream(Constants.whiteKing), 60, 60, true, false);
         //Image bKing = new Image(getClass().getResourceAsStream(Constants.blackKing), 60, 60, true, false);
         
-        ImageView king = new ImageView(wKing);
-        king.setX(1000);
-        king.setY(0);
+        //ImageView king = new ImageView(wKing);
+        //king.setX(1000);
+        //king.setY(0);
 
-        HBox logo  = new HBox(king);
-        logo.setAlignment(Pos.TOP_LEFT);
+        //HBox logo  = new HBox(king);
+        //logo.setAlignment(Pos.TOP_LEFT);
         
         // 5 pixels of spacing
         VBox buttons = new VBox(5, newGame, resume, exit);
         buttons.setAlignment(Pos.CENTER);
         
-        VBox ui = new VBox(20, logo, label, buttons);
+        VBox ui = new VBox(20, label, buttons);
         ui.setAlignment(Pos.CENTER);
         
         Scene initalScene = new Scene(ui, SCENE_WIDTH, SCENE_HEIGHT);

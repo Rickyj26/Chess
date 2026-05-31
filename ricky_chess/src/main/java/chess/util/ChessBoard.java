@@ -23,7 +23,7 @@ public class ChessBoard implements Serializable {
             chessGrid[1][col] = new Pawn(Alliance.BLACK, new Position(1, col));
             chessGrid[6][col] = new Pawn(Alliance.WHITE, new Position(6, col));
         }
-        
+
         // 1st row, white pieces.
         chessGrid[7][0] = new Rook(Alliance.WHITE, new Position(7, 0));
         chessGrid[7][1] = new Knight(Alliance.WHITE, new Position(7, 1));
@@ -43,9 +43,14 @@ public class ChessBoard implements Serializable {
         chessGrid[0][5] = new Bishop(Alliance.BLACK, new Position(0, 5));
         chessGrid[0][6] = new Knight(Alliance.BLACK, new Position(0, 6));
         chessGrid[0][7] = new Rook(Alliance.BLACK, new Position(0, 7));
+        
     }
 
     public Piece[][] getChessGrid() {
         return chessGrid;
+    }
+
+    public Piece getPiece(Piece p) {
+        return chessGrid[p.getPosition().getRow()][p.getPosition().getCol()];
     }
 }

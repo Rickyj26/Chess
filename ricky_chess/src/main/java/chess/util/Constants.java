@@ -22,5 +22,4 @@ public class Constants {
 
     /*SAVE FILE LOCATION*/
     public static final String fileLocation = "/chess/saveFile/games.txt";
-    
 }

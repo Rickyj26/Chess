@@ -1,10 +1,12 @@
 package chess;
 
 import java.io.Serializable;
+import java.time.LocalTime;
 
-import chess.saveFile.FileSaver;
 import chess.util.Alliance;
 import chess.util.ChessBoard;
+import chess.util.FileSaver;
+import chess.util.Position;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,7 +29,7 @@ public class Game implements Serializable {
     //Duration p1Time = Duration.minutes(5);
     //Duration p2Time = Duration.minutes(5);
 
-    //private LocalTime p1Time;
+    private LocalTime p1Time;
     //private LocalTime p2Time;
 
     private Alliance currColor = Alliance.WHITE;
@@ -82,8 +84,14 @@ public class Game implements Serializable {
 
     public void start(Stage stage) {
         Pane board = new Pane();
-        board.setPrefSize(480, 480);
-        //HBox board = new HBox();
+
+        Label p1Name = new Label("Player 1: " + this.player1);
+        Label p1Time = new Label("Time left: 5:00");
+
+        Label p2Name = new Label("Player 2: " + this.player2);
+        Label p2Time = new Label("Time left: 5:00");
+
+        Label turn = new Label("Current turn: " + this.currColor);  
 
         for(int row = 0; row < 8; row++) {
             for(int col = 0; col < 8; col++) {
@@ -101,7 +109,32 @@ public class Game implements Serializable {
             }
         }
 
-        Scene chess = new Scene(board, 480, 480);
+        board.getChildren().forEach(Rectangle -> {
+            // logic for selecting and moving pieces.
+            Rectangle.setOnMouseClicked(e -> {
+                int col = (int) Rectangle.getLayoutX() / 60;
+                int lastCol = col;
+
+                int row = (int) Rectangle.getLayoutY() / 60;
+                int lastRow = row;
+                
+                chessBoard.getChessGrid()[row][col].move(chessBoard, new Position(lastRow, lastCol));
+                System.out.println("Clicked on square: (" + row + ", " + col + ")");
+            });
+
+        });
+
+        board.getChildren().addAll(p1Name, p1Time, p2Name, p2Time, turn);
+        p1Name.relocate(500, 10);
+        p1Time.relocate(500, 40);
+
+        turn.relocate(500, 230);
+
+        p2Name.relocate(500, 430);
+        p2Time.relocate(500, 460);
+        
+
+        Scene chess = new Scene(board, 650, 480);
         stage.setScene(chess);
     }
 
@@ -113,8 +146,31 @@ public class Game implements Serializable {
         FileSaver.saveGame(this);
     }
 
-    public void getTimeLeft() {
-        
+    public String getTimeLeft(Alliance color) {
+        long currTime = System.nanoTime();
+
+        // in seconds
+        long timeDiff = (System.nanoTime() - currTime) / 1_000_000_000;
+
+        //p1Time.
+
+        int secondsLeft = 0;
+        int minutesLeft = 0;
+        int hrsLeft = 0;
+
+        return "%f : %f : %f".formatted(hrsLeft, minutesLeft, secondsLeft);
+    }
+
+    private int toMinutes() {
+        return 0;
+    }
+
+    private int toSeconds() {
+        return 0;
+    }
+
+    private int toHours() {
+        return 0;
     }
 
     @Override

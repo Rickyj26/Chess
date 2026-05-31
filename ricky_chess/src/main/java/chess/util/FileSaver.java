@@ -1,4 +1,4 @@
-package chess.saveFile;
+package chess.util;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -7,14 +7,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import chess.Game;
-import chess.util.Constants;
 
 public class FileSaver {
     private FileSaver() {}
 
     public static void saveGame(Game game) {
         // Implementation for saving the game
-        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(Constants.fileLocation))) {
+        try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FileSaver.class.getResource(Constants.fileLocation).getFile()))) {
             outputStream.writeObject(game);
         } catch (IOException e) {
             System.out.println("Error saving game: " + e.getMessage());
