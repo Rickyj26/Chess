@@ -11,6 +11,11 @@ import chess.Game;
 public class FileSaver {
     private FileSaver() {}
 
+    /**
+     * Method for saving/serializing any game.
+     * 
+     * @param game The game to save.
+     */
     public static void saveGame(Game game) {
         // Implementation for saving the game
         try(ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(FileSaver.class.getResource(Constants.fileLocation).getFile()))) {
@@ -20,6 +25,11 @@ public class FileSaver {
         }
     }
 
+    /**
+     * Method for returning the game so it can be resumed.
+     * 
+     * @return Game game object
+     */
     public static Game getGame() {
         // returns the game file so Main.java can handle it.
         try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(Constants.fileLocation))) {

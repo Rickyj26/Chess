@@ -26,7 +26,7 @@ public class Main extends Application {
         Label label = new Label("Welcome to chess simulator!");
         
         Button newGame = new Button("New Game");
-        Button resume = new Button("Load Game");
+        Button resume = new Button("Resume");
         Button exit = new Button("Save and exit");
 
         newGame.setOnAction(e -> {
@@ -65,19 +65,6 @@ public class Main extends Application {
             System.out.println("Game saved successfully!");
             primaryStage.close();
         });
-        
-        /*HOME MENU*/
-        // Home UI elements. Rudimentary for now, but it will be improved in the future.
-        //Image wKing = new Image(Constants.whiteKing, 60, 60, true, false);
-        //Image wKing = new Image(getClass().getResourceAsStream(Constants.whiteKing), 60, 60, true, false);
-        //Image bKing = new Image(getClass().getResourceAsStream(Constants.blackKing), 60, 60, true, false);
-        
-        //ImageView king = new ImageView(wKing);
-        //king.setX(1000);
-        //king.setY(0);
-
-        //HBox logo  = new HBox(king);
-        //logo.setAlignment(Pos.TOP_LEFT);
         
         // 5 pixels of spacing
         VBox buttons = new VBox(5, newGame, resume, exit);

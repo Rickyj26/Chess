@@ -16,9 +16,10 @@ public class ChessBoard implements Serializable {
 
     /**
      * Constructor for the 8x8 ChessBoard. Instantiates where each piece should be
-     * and provides a Position for tracking pieces.
+     * and provides a initial position for the piece.
      */
     public ChessBoard() {
+        // initializes initial position of the piece.
         for(int col = 0; col < 8; col++) {
             chessGrid[1][col] = new Pawn(Alliance.BLACK, new Position(1, col));
             chessGrid[6][col] = new Pawn(Alliance.WHITE, new Position(6, col));
@@ -45,11 +46,22 @@ public class ChessBoard implements Serializable {
         chessGrid[0][7] = new Rook(Alliance.BLACK, new Position(0, 7));
         
     }
-
+    
+    /**
+     * Getter for getting the map of the pieces.
+     * 
+     * @return The chess grid 2D array map.
+     */
     public Piece[][] getChessGrid() {
         return chessGrid;
     }
 
+    /**
+     * Shortcut for getting the piece of a type.
+     * 
+     * @param p The piece for input.
+     * @return A piece object representing the piece.
+     */
     public Piece getPiece(Piece p) {
         return chessGrid[p.getPosition().getRow()][p.getPosition().getCol()];
     }

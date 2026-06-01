@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public abstract class Piece implements Serializable {
+    // Because these objects are not Serializable.
     private transient final Image piece;
     private transient final ImageView pieceView;
 
@@ -20,8 +21,9 @@ public abstract class Piece implements Serializable {
 
     private Position currPosition;
 
-    /*
+    /**
      * Constructor for the Piece class.
+     *
      * @param color The color of the piece (white or black).
      * @param path The path to the image file for the piece.
      * @param position The initial position of the piece.
@@ -47,9 +49,13 @@ public abstract class Piece implements Serializable {
             // sets new position for the piece:
             chessGrid.getChessGrid()[end.getRow()][end.getCol()] = chessGrid.getChessGrid()[this.getPosition().getRow()][this.getPosition().getCol()];
             this.setPosition(end);
+
+            System.out.println(chessGrid.getChessGrid()[end.getRow()][end.getCol()]);
             
             // makes the previous position obsolete:
             chessGrid.getChessGrid()[this.getPosition().getRow()][this.getPosition().getCol()] = null;
+        } else {
+            System.out.println("Move not allowed!");
         }
     }
     

@@ -6,10 +6,24 @@ import chess.util.Constants;
 import chess.util.Position;
 
 public class Pawn extends Piece {
+    /**
+     * Constructor for creating the Pawn.
+     * 
+     * @param color The color of the Pawn.
+     * @param pos The initial position of the piece.
+     */
     public Pawn(Alliance color, Position pos) {
         super(color, color.equals(Alliance.WHITE) ? Constants.whitePawn : Constants.blackPawn, pos);
     }
 
+    /**
+     * Method for verifying the Pawn's moveset using the map board and the end position. Checks
+     * if the end position is legal.
+     * 
+     * @param board A 2D array map overlooking the position of the piece.
+     * @param end The end position.
+     * @return if the move is legal.
+     */
     @Override
     public boolean isLegal(ChessBoard board, Position end) {
         // row: + if white, - if black. col: + if right, - if left.
@@ -35,6 +49,10 @@ public class Pawn extends Piece {
             return true;
         }
 
+        return false;
+    }
+
+    public boolean isPromotion() {
         return false;
     }
 }   

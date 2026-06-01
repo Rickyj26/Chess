@@ -1,8 +1,9 @@
 package chess;
 
 import java.io.Serializable;
-import java.time.LocalTime;
+import java.util.function.Supplier;
 
+import chess.Pieces.Piece;
 import chess.util.Alliance;
 import chess.util.ChessBoard;
 import chess.util.FileSaver;
@@ -20,8 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-// absolute positioning system, for every piece, calculate if the pieces are fiendly or not,
-// then create a list of movesets. If the user does not select a valid square, do not move there.
+/**
+ * Main class for managing game states and end conditions.
+ */
 public class Game implements Serializable {
     private String player1, player2;
 
@@ -29,42 +31,49 @@ public class Game implements Serializable {
     //Duration p1Time = Duration.minutes(5);
     //Duration p2Time = Duration.minutes(5);
 
-    private LocalTime p1Time;
+    //private LocalTime p1Time;
     //private LocalTime p2Time;
 
+    // for checking whose turn it is.
     private Alliance currColor = Alliance.WHITE;
 
-    
     private ChessBoard chessBoard = new ChessBoard();
+    private Supplier<Piece> supplier;
 
-    //private Label p1TimeLabel = new Label(p1Time.toMinutes());
-    //private Label p2TimeLabel = new Label(p2Time.toMinutes());
-
-    public Game() {}
-
+    /**
+     * Setter for setting the 2 players.
+     * 
+     * @param player1 The first player
+     * @param player2 The second player
+     */
     public void setPlayers(String player1, String player2) {
         this.player1 = player1;
         this.player2 = player2;
     }
 
+    /**
+     * Initialize method for defining the 2 players in the game.
+     * 
+     * @param stage The stage so we can show different windows.
+     */
     public void init(Stage stage) {
         //initialize the game, such as setting up the board and pieces, and then we can start the game loop.
         Label p1 = new Label("Player 1 Name (white): ");
         Label p2 = new Label("Player 2 Name (black): ");
 
-        //Label error = new Label("");
-
         TextField p1Name = new TextField();
         TextField p2Name = new TextField();
 
         HBox p1Info = new HBox(5, p1, p1Name);
+        p1Info.setAlignment(Pos.CENTER);
+
         HBox p2Info = new HBox(5, p2, p2Name);
+        p2Info.setAlignment(Pos.CENTER);
 
         Button confirm = new Button("Confirm");
 
         confirm.setOnAction(e -> {
             if(p1Name.getText().isEmpty() || p2Name.getText().isEmpty()) {
-                //error.setText("Please enter both player names.");
                 setPlayers("p1", "p2");
             } else {
                 setPlayers(p1Name.getText(), p2Name.getText());
@@ -82,6 +91,11 @@ public class Game implements Serializable {
         stage.setScene(config);
     }
 
+    /**
+     * Method for starting the chess game.
+     * 
+     * @param stage The stage so we can show the chess board window.
+     */
     public void start(Stage stage) {
         Pane board = new Pane();
 
@@ -108,20 +122,25 @@ public class Game implements Serializable {
                 }
             }
         }
-
+        
         board.getChildren().forEach(Rectangle -> {
             // logic for selecting and moving pieces.
             Rectangle.setOnMouseClicked(e -> {
                 int col = (int) Rectangle.getLayoutX() / 60;
-                int lastCol = col;
-
                 int row = (int) Rectangle.getLayoutY() / 60;
-                int lastRow = row;
+
+                Piece p = chessBoard.getChessGrid()[row][col];
                 
-                chessBoard.getChessGrid()[row][col].move(chessBoard, new Position(lastRow, lastCol));
+                if(p != null) {
+                    supplier = () -> p;
+                }
+
+                if(supplier.get() != null) {
+                    supplier.get().move(chessBoard, new Position(row, col));
+                }
+                
                 System.out.println("Clicked on square: (" + row + ", " + col + ")");
             });
-
         });
 
         board.getChildren().addAll(p1Name, p1Time, p2Name, p2Time, turn);
@@ -137,14 +156,47 @@ public class Game implements Serializable {
         stage.setScene(chess);
     }
 
-    public void resume(Stage primaryStage) {
+    /**
+     * Method for continuing a past game. However, if there are no saved 
+     * games, we make a new window telling the user that there are no
+     * saved games.
+     * 
+     * @param stage The stage so we can show the window if there are no saved games.
+     */
+    public void resume(Stage stage) {
+        Game game = FileSaver.getGame();
 
+        if(game == null) {
+            Label errorMsg = new Label("No saved games!");
+            Scene previousScene = stage.getScene();
+
+            Button back = new Button("back");
+
+            back.setOnAction(e -> {
+                stage.setScene(previousScene);
+            });
+
+            VBox error = new VBox(5, errorMsg, back);
+            error.setAlignment(Pos.CENTER);
+            stage.setScene(new Scene(error, 180, 180));
+        } else {
+            game.start(stage);
+        }
     }
 
+    /**
+     * Method for saving this current game.
+     */
     public void save() {
         FileSaver.saveGame(this);
     }
 
+    /**
+     * 
+     * @param color The color of the piece.
+     * @return String representation of the time left so
+     * it can be put into the main chess ui.
+     */
     public String getTimeLeft(Alliance color) {
         long currTime = System.nanoTime();
 
@@ -160,18 +212,10 @@ public class Game implements Serializable {
         return "%f : %f : %f".formatted(hrsLeft, minutesLeft, secondsLeft);
     }
 
-    private int toMinutes() {
-        return 0;
-    }
-
-    private int toSeconds() {
-        return 0;
-    }
-
-    private int toHours() {
-        return 0;
-    }
-
+    /**
+     * Method for overriding the message to game condition when 
+     * printing out the Game object.
+     */
     @Override
     public String toString() {
         return 

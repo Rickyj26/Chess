@@ -6,10 +6,24 @@ import chess.util.Constants;
 import chess.util.Position;
 
 public class Bishop extends Piece {
+    /**
+     * Constructor for creating the Bishop.
+     * 
+     * @param color The color of the Bishop.
+     * @param pos The initial position of the piece.
+     */
     public Bishop(Alliance color, Position pos) {
         super(color, color.equals(Alliance.WHITE) ? Constants.whiteBishop : Constants.blackBishop, pos);
     }
 
+    /**
+     * Method for verifying the Bishop's moveset using the map board and the end position. Checks
+     * if the end position is legal.
+     * 
+     * @param board A 2D array map overlooking the position of the piece.
+     * @param end The end position.
+     * @return if the move is legal.
+     */
     @Override
     public boolean isLegal(ChessBoard board, Position end) {
         // accounts for all 4 directions.

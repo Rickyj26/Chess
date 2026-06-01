@@ -1,5 +1,8 @@
 package chess.util;
 
+/**
+ * Utility class for accessing the various resources of the chess game.
+ */
 public class Constants {
     /*IMAGE LINKS FOR WHITE PIECES*/
     public static final String whiteBishop = "/chess/ChessImages/White/whiteBishop.png";
