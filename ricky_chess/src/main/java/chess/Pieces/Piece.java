@@ -7,6 +7,9 @@ import chess.util.ChessBoard;
 import chess.util.Position;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public abstract class Piece implements Serializable {
     // Because these objects are not Serializable.
@@ -16,6 +19,8 @@ public abstract class Piece implements Serializable {
     protected final int xPixels = 60;
     protected final int yPixels = 60;
 
+    private String path;
+    
     // Color of the pieces.
     private final Alliance color;
 
@@ -29,12 +34,12 @@ public abstract class Piece implements Serializable {
      * @param position The initial position of the piece.
      */
     public Piece(Alliance color, String path, Position position) {
+        this.path = path;
         this.color = color;
+        this.currPosition = position;
 
         this.piece = new Image(getClass().getResourceAsStream(path), xPixels, yPixels, false, false);
         this.pieceView = new ImageView(this.piece);
-
-        this.currPosition = position;
     }
 
     /**
@@ -59,6 +64,15 @@ public abstract class Piece implements Serializable {
     public void move(ChessBoard chessGrid, Position end) {
         // move the piece from curr to end, and update the chessGrid accordingly.
         if(chessGrid.getPiece(this).isLegal(chessGrid, end)) {
+            // prevents the King from being captured, which is an end condition for the game.
+            if(chessGrid.getChessGrid()[end.getRow()][end.getCol()] != null && chessGrid.getChessGrid()[end.getRow()][end.getCol()].equals(chessGrid.findKing(this.color == Alliance.WHITE ? Alliance.BLACK : Alliance.WHITE))) {
+                if(chessGrid.isInCheck()) {
+                    
+                }
+
+                return;
+            }
+
             // sets new position for the piece:
             Position currentPos = chessGrid.getPiece(this).getPosition();
 
@@ -69,16 +83,23 @@ public abstract class Piece implements Serializable {
 
             this.setPosition(end);
 
-            System.out.println(chessGrid.getChessGrid()[this.getPosition().getRow()][this.getPosition().getCol()].getPosition());
-
-            
-            /*
-            if(chessGrid.getChessGrid()[end.getRow()][end.getCol()].getColor() != this.color) {
-                chessGrid.getChessGrid()[end.getRow()][end.getCol()] = chessGrid.getPiece(this);
-            }
-            */
+            //System.out.println(chessGrid.getChessGrid()[this.getPosition().getRow()][this.getPosition().getCol()].getPosition());
         } else {
             System.out.println("Move not allowed!");
+        }
+    }
+
+    @Deprecated
+    public void highlightLegalMoves(ChessBoard chessGrid, Pane pane) {
+        for(int row = 0; row < chessGrid.getChessGrid().length; row++) {
+            for(int col = 0; col < chessGrid.getChessGrid()[row].length; col++) {
+                if(this.isLegal(chessGrid, new Position(row, col))) {
+                    Rectangle highlight = new Rectangle(60, 60, Color.YELLOW);
+
+                    pane.getChildren().add(highlight);
+                    highlight.relocate(col * 60, row * 60);
+                }
+            }
         }
     }
     
@@ -127,6 +148,10 @@ public abstract class Piece implements Serializable {
      * @return The image of the piece.
      */
     public ImageView getPieceView() {
+        if(this.pieceView == null) {
+            return new ImageView(new Image(getClass().getResourceAsStream(this.path), xPixels, yPixels, false, false));
+        }
+
         return this.pieceView;
     }
 

@@ -49,7 +49,7 @@ public class Main extends Application {
             System.out.println("Saving and exiting game...");
 
             // logic for saving game.
-            //chessGame.save();   
+            chessGame.save();   
 
             System.out.println("Game saved successfully!");
             primaryStage.close();

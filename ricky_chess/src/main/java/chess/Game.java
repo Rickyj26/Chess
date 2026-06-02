@@ -1,11 +1,13 @@
 package chess;
 
 import java.io.Serializable;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import chess.Pieces.Piece;
 import chess.util.Alliance;
 import chess.util.ChessBoard;
+import chess.util.CountDownTimer;
 import chess.util.FileSaver;
 import chess.util.Position;
 import javafx.geometry.Pos;
@@ -27,18 +29,12 @@ import javafx.stage.Stage;
 public class Game implements Serializable {
     private String player1, player2;
 
-    // default time period
-    //Duration p1Time = Duration.minutes(5);
-    //Duration p2Time = Duration.minutes(5);
-
-    //private LocalTime p1Time;
-    //private LocalTime p2Time;
-
     // for checking whose turn it is.
     private Alliance currColor = Alliance.WHITE;
 
     private ChessBoard chessBoard = new ChessBoard();
     private Supplier<Piece> supplier;
+    private BooleanSupplier isWhiteTurn;;
 
     /**
      * Setter for setting the 2 players.
@@ -98,13 +94,16 @@ public class Game implements Serializable {
      */
     public void start(Stage stage) {
         Pane board = new Pane();
+        
+        CountDownTimer p1Timer = new CountDownTimer(300);
+        CountDownTimer p2Timer = new CountDownTimer(300);  
 
         Label p1Name = new Label(this.player1);
-        Label p1Time = new Label("Time left: 5:00");
+        Label p1Time = new Label(p1Timer.toString());
 
         Label p2Name = new Label(this.player2);
-        Label p2Time = new Label("Time left: 5:00");
-
+        Label p2Time = new Label(p2Timer.toString());
+        
         Label turn = new Label("Current turn: " + this.currColor);  
 
         for(int row = 0; row < 8; row++) {
@@ -122,7 +121,13 @@ public class Game implements Serializable {
                 }
             }
         }
-        
+
+        p1Timer.start(p1Time);
+        p2Timer.start(p2Time);
+
+        p1Timer.pause();
+        p2Timer.pause();
+
         board.getChildren().forEach(Rectangle -> {
             // logic for selecting and moving pieces.
             Rectangle.setOnMouseClicked(e -> {
@@ -135,14 +140,28 @@ public class Game implements Serializable {
                     System.out.println("------------------------------");
                     System.out.println("Clicked on piece: " + p);
 
-                    if(p != null) {
+                    if(p != null && p.getColor() == currColor) {
                         // piece is saved and selected.
                         supplier = () -> p;
+                        
                     }
                 } else {
                     supplier.get().move(chessBoard, new Position(row, col));
-
                     supplier = null;
+
+                    if(currColor == Alliance.WHITE) {
+                        p1Timer.pause();
+                        p2Timer.resume();
+
+                        currColor = Alliance.BLACK;
+                    } else {
+                        p1Timer.resume();
+                        p2Timer.pause();
+
+                        currColor = Alliance.WHITE;
+                    }
+
+                    turn.setText("Current turn: " + currColor);
 
                     refreshPiecePositions(board);
                 }
@@ -153,18 +172,22 @@ public class Game implements Serializable {
         });
 
         board.getChildren().addAll(p1Name, p1Time, p2Name, p2Time, turn);
-        p1Name.relocate(500, 10);
-        p1Time.relocate(500, 30);
+        p2Name.relocate(500, 10);
+        p2Time.relocate(500, 30);
 
         turn.relocate(500, 230);
 
-        p2Name.relocate(500, 440);
-        p2Time.relocate(500, 460);
+        p1Name.relocate(500, 440);
+        p1Time.relocate(500, 460);
         
         Scene chess = new Scene(board, 650, 480);
         stage.setScene(chess);
     }
     
+    /**
+     * Method for refreshing the images of the pieces.
+     * @param board The Pane board so we can add it to the stage.
+     */
     private void refreshPiecePositions(Pane board) {
         // Remove all ImageViews from board
         board.getChildren().removeIf(node -> node instanceof ImageView);
@@ -210,34 +233,11 @@ public class Game implements Serializable {
         }
     }
 
-    
-
     /**
      * Method for saving this current game.
      */
     public void save() {
         FileSaver.saveGame(this);
-    }
-
-    /**
-     * 
-     * @param color The color of the piece.
-     * @return String representation of the time left so
-     * it can be put into the main chess ui.
-     */
-    public String getTimeLeft(Alliance color) {
-        long currTime = System.nanoTime();
-
-        // in seconds
-        long timeDiff = (System.nanoTime() - currTime) / 1_000_000_000;
-
-        //p1Time.
-
-        int secondsLeft = 0;
-        int minutesLeft = 0;
-        int hrsLeft = 0;
-
-        return "%f : %f : %f".formatted(hrsLeft, minutesLeft, secondsLeft);
     }
 
     /**

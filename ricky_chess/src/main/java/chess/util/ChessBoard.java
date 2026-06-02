@@ -65,4 +65,27 @@ public class ChessBoard implements Serializable {
     public Piece getPiece(Piece p) {
         return chessGrid[p.getPosition().getRow()][p.getPosition().getCol()];
     }
+
+    public King findKing(Alliance color) {
+        for(int row = 0; row < 8; row++) {
+            for(int col = 0; col < 8; col++) {
+                if(getChessGrid()[row][col] instanceof King && getChessGrid()[row][col].getColor() == color) {
+                    return (King)getChessGrid()[row][col];
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    public boolean isInCheck() {
+        for(int row = 0; row < getChessGrid().length; row++) {
+            for(int col = 0; col < getChessGrid()[row].length; col++) {
+                King piece = findKing(Alliance.WHITE);
+            }
+        }
+
+        return false;
+    }
 }
