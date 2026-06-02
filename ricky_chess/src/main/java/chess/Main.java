@@ -41,7 +41,6 @@ public class Main extends Application {
             
             // make a new scene where we can select from a max list of 5 saved games,,
             // ordered from most recent to oldest, and then continue the same piece locations.
-            // temporary
             chessGame.resume(primaryStage);
             
         });
@@ -50,20 +49,14 @@ public class Main extends Application {
             System.out.println("Saving and exiting game...");
 
             // logic for saving game.
-            chessGame.save();   
+            //chessGame.save();   
 
             System.out.println("Game saved successfully!");
             primaryStage.close();
         });
 
-        primaryStage.setOnCloseRequest(e-> {
-            System.out.println("Saving and exiting game...");
-
-            // logic for saving game.
-            //chessGame.save();   
-
-            System.out.println("Game saved successfully!");
-            primaryStage.close();
+        primaryStage.setOnCloseRequest(e -> {
+           exit.fire();
         });
         
         // 5 pixels of spacing

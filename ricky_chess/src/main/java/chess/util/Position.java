@@ -58,4 +58,9 @@ public class Position implements Serializable {
     public int getCol() {
         return col;
     }
+
+    @Override
+    public String toString() {
+        return "Position: (%d, %d)".formatted(row, col);
+    }
 }

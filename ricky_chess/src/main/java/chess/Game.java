@@ -99,10 +99,10 @@ public class Game implements Serializable {
     public void start(Stage stage) {
         Pane board = new Pane();
 
-        Label p1Name = new Label("Player 1: " + this.player1);
+        Label p1Name = new Label(this.player1);
         Label p1Time = new Label("Time left: 5:00");
 
-        Label p2Name = new Label("Player 2: " + this.player2);
+        Label p2Name = new Label(this.player2);
         Label p2Time = new Label("Time left: 5:00");
 
         Label turn = new Label("Current turn: " + this.currColor);  
@@ -128,18 +128,27 @@ public class Game implements Serializable {
             Rectangle.setOnMouseClicked(e -> {
                 int col = (int) Rectangle.getLayoutX() / 60;
                 int row = (int) Rectangle.getLayoutY() / 60;
-
-                Piece p = chessBoard.getChessGrid()[row][col];
                 
-                if(p != null) {
-                    supplier = () -> p;
-                }
+                if(supplier == null) {
+                    Piece p = chessBoard.getChessGrid()[row][col];
+                    
+                    System.out.println("------------------------------");
+                    System.out.println("Clicked on piece: " + p);
 
-                if(supplier.get() != null) {
+                    if(p != null) {
+                        // piece is saved and selected.
+                        supplier = () -> p;
+                    }
+                } else {
                     supplier.get().move(chessBoard, new Position(row, col));
+
+                    supplier = null;
+
+                    refreshPiecePositions(board);
                 }
-                
+
                 System.out.println("Clicked on square: (" + row + ", " + col + ")");
+                System.out.println("------------------------------");
             });
         });
 
@@ -154,6 +163,23 @@ public class Game implements Serializable {
         
         Scene chess = new Scene(board, 650, 480);
         stage.setScene(chess);
+    }
+    
+    private void refreshPiecePositions(Pane board) {
+        // Remove all ImageViews from board
+        board.getChildren().removeIf(node -> node instanceof ImageView);
+
+        // Re-add all pieces at their current positions
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = chessBoard.getChessGrid()[row][col];
+                if (piece != null) {
+                    ImageView pieceView = piece.getPieceView();
+                    pieceView.relocate(col * 60, row * 60);
+                    board.getChildren().add(pieceView);
+                }
+            }
+        }
     }
 
     /**
@@ -183,6 +209,8 @@ public class Game implements Serializable {
             game.start(stage);
         }
     }
+
+    
 
     /**
      * Method for saving this current game.

@@ -27,11 +27,12 @@ public class Pawn extends Piece {
     @Override
     public boolean isLegal(ChessBoard board, Position end) {
         // row: + if white, - if black. col: + if right, - if left.
-        int rowDiff = Math.abs(board.getChessGrid()[this.getPosition().getRow()][this.getPosition().getCol()].getPosition().getRow() - end.getRow());
+        int direction = this.getColor() == Alliance.WHITE ? 1 : -1;
+
+        int rowDiff = (board.getChessGrid()[this.getPosition().getRow()][this.getPosition().getCol()].getPosition().getRow() - end.getRow()) * direction;
         int colDiff = Math.abs(board.getChessGrid()[this.getPosition().getRow()][this.getPosition().getCol()].getPosition().getCol() - end.getCol());
 
         // if the pawn moves forward by 1 and the end positon is empty, then it's legal.
-        // also handles promotion logic.
         if(rowDiff == 1 && colDiff == 0 && board.getChessGrid()[end.getRow()][end.getCol()] == null) {
             return true;
         }

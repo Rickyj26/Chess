@@ -36,7 +36,7 @@ public class Rook extends Piece {
 
         // line logic:
         if(board.getPiece(this).getPosition().getRow() == end.getRow()) {
-            int startingPos = Math.min(board.getPiece(this).getPosition().getCol(), end.getCol());
+            int startingPos = Math.min(board.getPiece(this).getPosition().getCol(), end.getCol()) + 1;
             int endingPos = Math.max(board.getPiece(this).getPosition().getCol(), end.getCol());
 
             for(int colInRow = startingPos; colInRow < endingPos; colInRow++) {
@@ -48,12 +48,12 @@ public class Rook extends Piece {
             return true;
 
         } else if(board.getPiece(this).getPosition().getCol() == end.getCol()) { 
-            int startingPos = Math.min(board.getPiece(this).getPosition().getRow(), end.getRow());
+            int startingPos = Math.min(board.getPiece(this).getPosition().getRow(), end.getRow()) + 1;
             int endingPos = Math.max(board.getPiece(this).getPosition().getRow(), end.getRow());
             
             for(int rowInCol = startingPos; rowInCol < endingPos; rowInCol++) {
-               if(board.getChessGrid()[rowInCol][board.getPiece(this).getPosition().getCol()] != null) {
-                   return false;
+                if(board.getChessGrid()[rowInCol][board.getPiece(this).getPosition().getCol()] != null) {
+                    return false;
                }
             }
 
